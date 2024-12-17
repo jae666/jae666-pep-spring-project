@@ -23,17 +23,24 @@ public class SocialMediaController {
         this.messageService = messageService;
     }
 
-    // User registration
+
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody Account account) {
-        Account registeredAccount = accountService.registerAccount(account);
-        
-        if (registeredAccount != null) {
-            return ResponseEntity.ok(registeredAccount);
-        } else if (accountService.findByUsername(account.getUsername()) != null) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        } else {
+        try {
+            Account registeredAccount = accountService.registerAccount(account);
+            
+            if (registeredAccount != null) {
+                return ResponseEntity.ok(registeredAccount);
+            } else {
+                // Username already exists
+                return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            }
+        } catch (IllegalArgumentException e) {
+            // Handle validation errors
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        } catch (Exception e) {
+            // Catch any unexpected errors
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -99,25 +106,5 @@ public class SocialMediaController {
     public ResponseEntity<List<Message>> getMessagesByUser(@PathVariable Integer accountId) {
         List<Message> messages = messageService.getMessagesByUser(accountId);
         return ResponseEntity.ok(messages);
-    }
-
-    @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody Account account) {
-        try {
-            Account registeredAccount = accountService.registerAccount(account);
-            
-            if (registeredAccount != null) {
-                return ResponseEntity.ok(registeredAccount);
-            } else {
-                // This means a user with the username already exists
-                return ResponseEntity.status(HttpStatus.CONFLICT).build();
-            }
-        } catch (IllegalArgumentException e) {
-            // Handle validation errors
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        } catch (Exception e) {
-            // Catch any unexpected errors
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
     }
 }
