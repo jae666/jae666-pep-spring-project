@@ -34,3 +34,17 @@ public class AccountService {
         // Save and return the new account
         return accountRepository.save(account);
     }
+
+    // Validate login credentials
+    public Account login(Account account) {
+        // Find account by username
+        Account existingAccount = accountRepository.findByUsername(account.getUsername());
+
+        // Check if account exists and password matches
+        if (existingAccount != null && existingAccount.getPassword().equals(account.getPassword())) {
+            return existingAccount;
+        }
+
+        return null;
+    }
+}
