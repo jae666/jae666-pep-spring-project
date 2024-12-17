@@ -22,3 +22,17 @@ public class SocialMediaController {
         this.accountService = accountService;
         this.messageService = messageService;
     }
+
+    // User registration
+    @PostMapping("/register")
+    public ResponseEntity<?> registerUser(@RequestBody Account account) {
+        Account registeredAccount = accountService.registerAccount(account);
+        
+        if (registeredAccount != null) {
+            return ResponseEntity.ok(registeredAccount);
+        } else if (accountService.findByUsername(account.getUsername()) != null) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
