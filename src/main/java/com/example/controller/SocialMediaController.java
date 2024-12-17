@@ -48,3 +48,76 @@ public class SocialMediaController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
+
+    // Create a new message
+    @PostMapping("/messages")
+    public ResponseEntity<?> createMessage(@RequestBody Message message) {
+        Message createdMessage = messageService.createMessage(message);
+        
+        if (createdMessage != null) {
+            return ResponseEntity.ok(createdMessage);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    // Get all messages
+    @GetMapping("/messages")
+    public ResponseEntity<List<Message>> getAllMessages() {
+        List<Message> messages = messageService.getAllMessages();
+        return ResponseEntity.ok(messages);
+    }
+
+    // Get message by ID
+    @GetMapping("/messages/{messageId}")
+    public ResponseEntity<Message> getMessageById(@PathVariable Integer messageId) {
+        Optional<Message> message = messageService.getMessageById(messageId);
+        return message.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.ok().build());
+    }
+
+    // Delete a message
+    @DeleteMapping("/messages/{messageId}")
+    public ResponseEntity<Integer> deleteMessage(@PathVariable Integer messageId) {
+        boolean deleted = messageService.deleteMessage(messageId);
+        return deleted ? ResponseEntity.ok(1) : ResponseEntity.ok().build();
+    }
+
+    // Update a message
+    @PatchMapping("/messages/{messageId}")
+    public ResponseEntity<?> updateMessage(@PathVariable Integer messageId, @RequestBody Message message) {
+        Message updatedMessage = messageService.updateMessage(messageId, message);
+        
+        if (updatedMessage != null) {
+            return ResponseEntity.ok(1);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    // Get messages by user
+    @GetMapping("/accounts/{accountId}/messages")
+    public ResponseEntity<List<Message>> getMessagesByUser(@PathVariable Integer accountId) {
+        List<Message> messages = messageService.getMessagesByUser(accountId);
+        return ResponseEntity.ok(messages);
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> registerUser(@RequestBody Account account) {
+        try {
+            Account registeredAccount = accountService.registerAccount(account);
+            
+            if (registeredAccount != null) {
+                return ResponseEntity.ok(registeredAccount);
+            } else {
+                // This means a user with the username already exists
+                return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            }
+        } catch (IllegalArgumentException e) {
+            // Handle validation errors
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        } catch (Exception e) {
+            // Catch any unexpected errors
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+}
