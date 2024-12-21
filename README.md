@@ -7,12 +7,10 @@ This project is a backend API for a hypothetical social media blog application. 
 The application follows RESTful principles and allows users to interact with the platform by performing CRUD operations on their messages, viewing other users' posts, and updating or deleting their own content.
 
 ## Technologies Used
-	Technologies Used
 	Spring Boot - version 2.7.0
 	Spring Data JPA - version 2.7.0
-	H2 Database (for development)
 	Maven - version 3.8.4
-	Java - version 17
+	Java - version 11
 
 ## Features
 	User Registration (POST /register)
@@ -30,7 +28,7 @@ Follow these steps to get your project up and running locally:
 ## Prerequisites
 Make sure you have the following installed:
 
-	Java 17
+	Java 11
 	Maven 3.8.4 or higher
 	Git
  
