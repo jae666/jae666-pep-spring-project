@@ -33,12 +33,12 @@ Make sure you have the following installed:
 Java 17
 Maven 3.8.4 or higher
 Git
-Installation
+## Installation
 Clone the repository:
 
 bash
 Copy code
-git clone https://github.com/your-github-username/spring-social-media-blog-api.git
+git clone https://github.com/jae666/jae666-pep-spring-project
 Navigate into the project directory:
 
 bash
